@@ -1,0 +1,321 @@
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class FormMain extends JFrame implements MouseListener, MouseMotionListener {
+
+	Dimension ScreenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+	int ScreenSizeW = (int) ScreenSize.getWidth(), ScreenSizeH = (int) ScreenSize.getHeight();
+
+	JLabel bar, lbsearch, lbexit, lbrestore, lbmini, lbbutlist, lbsetting, lbok;
+	public static JPanel pnList;
+	JTextField textsearch;
+
+	int WofList = 355, HofList = ScreenSizeH - 200, XofList = ScreenSizeW - WofList, YofList = 151,
+
+			WofTextSearch = 390, HofTextSearch = 30, XofTextSearch = ScreenSizeW - WofTextSearch - 10,
+			YofTextSearch = 12,
+
+			HofLogoBar = 150;
+	public static Color TitColor = new Color(201, 0, 7), // đậm
+			BarColor = Color.red;// lợt
+
+	public FormMain() {
+
+		// this.setSize(new
+		// Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
+		this.setUndecorated(true);
+		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setBackground(Color.black);
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
+
+		// TitColor=new Color(0, 168, 119);//đậm
+		// BarColor=new Color(18, 255, 188) ;//lợt
+		drawform();
+		setbar(this);
+		setProperties();
+
+		this.validate();
+		this.repaint();
+	}
+
+	public void drawform() {
+		drawPicture("picture\\logo.png", 20, 60, 80, 80);
+		drawPicture("picture\\title.png", 20, 12, 30, 30);
+		drawString(" Youtube Karaoke", "Courier New", 23, Color.white, 40, 15, 500, 25);
+
+		lbsearch = drawPicture("picture\\search.png", XofTextSearch + 10, YofTextSearch, 25, 25);
+		textsearch = drawtextsearch(XofTextSearch, YofTextSearch, WofTextSearch, HofTextSearch);
+
+		lbbutlist = drawPicture("picture\\list.png", ScreenSizeW - 35, 60 + 30, 25, 25);
+		pnList = drawPanel(XofList, YofList, WofList, HofList);
+
+		lbsetting = drawPicture("picture\\setting.png", ScreenSizeW - 35, 60, 25, 25);
+
+		// System.out.println((ScreenSizeW)+"_"+(ScreenSizeH));
+		drawbuttit();
+
+	}
+
+	public void setbar(JFrame jf) {
+
+		bar = new JLabel() {
+			private static final long serialVersionUID = 1L;
+
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
+				// create_Logo_bar
+				g.setColor(BarColor);
+				g.fillRect(0, 0, this.getWidth(), HofLogoBar);
+
+				// create_Tit_bar
+				g.setColor(TitColor);
+				g.fillRect(0, 0, this.getWidth(), 50);
+				g.fillRect(0, this.getHeight() - 50, this.getWidth(), 50);
+
+			}
+		};
+
+		jf.add(bar);
+	}
+
+	public void drawString(String string, String font, int fontsize, Color cl, int x, int y, int w, int h) {
+		JLabel lbTit = new JLabel(string);
+		lbTit.setFont(new Font(font, Font.BOLD, fontsize));
+		lbTit.setForeground(cl);
+		lbTit.setBounds(x, y, w, h);
+		lbTit.setOpaque(false);
+
+		this.add(lbTit);
+
+	}
+
+	public JLabel drawPicture(String string, int x, int y, int w, int h) {
+		JLabel lb = new JLabel();
+
+		// lbTit.setBackground(BarColor);
+		// ImageIcon icon = new ImageIcon(string);
+		// Image scaleImage =
+		// icon.getImage().getScaledInstance(w,h,Image.SCALE_DEFAULT);
+		// lbTit.setIcon(new ImageIcon(new
+		// ImageIcon(string).getImage().getScaledInstance(lbTit.getWidth(),
+		// lbTit.getHeight(), Image.SCALE_AREA_AVERAGING)));
+		// lbTit.setOpaque(true);
+
+		lb.setBounds(x, y, w, h);
+		lb.setIcon(new ImageIcon(getClass().getResource(string)));
+		lb.addMouseListener(this);
+		lb.addMouseMotionListener(this);
+		this.add(lb);
+		return lb;
+
+	}
+
+	public JPanel drawPanel(int x, int y, int w, int h) {
+		JPanel pn = new JPanel();
+		pn.setBackground(BarColor);
+		pn.setBounds(x, y, w, h);
+		pn.addMouseListener(this);
+		pn.addMouseMotionListener(this);
+		pn.setOpaque(true);
+		this.add(pn);
+		return pn;
+	}
+
+	// ===================================Text_Search=======================================
+	public JTextField drawtextsearch(int x, int y, int w, int h) {
+		JTextField jtext = new JTextField();
+
+		jtext.setBounds(x, y, w, h);
+		jtext.setBackground(TitColor);
+		jtext.setFont(new Font("Courier new", Font.BOLD, 16));
+		jtext.setForeground(Color.white);
+		jtext.setCaretColor(Color.WHITE);
+
+		jtext.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE),
+				BorderFactory.createEmptyBorder(0, 45, 0, 0)));
+		jtext.setText("Search");
+
+		jtext.setOpaque(false);
+		jtext.addMouseListener(this);
+		jtext.addMouseMotionListener(this);
+		this.add(jtext);
+		return jtext;
+
+	}
+
+	public void eventTextSearch(MouseEvent e) {
+		if (e.getSource() == textsearch) {
+			textsearch.setFocusable(true);
+			textsearch.requestFocus();
+			if ("Search".equals(textsearch.getText())) {
+				textsearch.setText("");
+			}
+		}
+		if (e.getSource() != textsearch) {
+			if ("".equals(textsearch.getText())) {
+				textsearch.setText("Search");
+			}
+			if (textsearch.isFocusable())
+				textsearch.setFocusable(false);
+		}
+	}
+
+	// =====================================================================================
+	// ==============================Button_tittle_and_event===================================
+	public void drawbuttit() {
+		lbexit = drawPicture("picture\\exit.png", this.getWidth() - 100 + 25 + 25, this.getHeight() - 25 - 12, 25, 25);
+		lbrestore = drawPicture("picture\\restore.png", this.getWidth() - 100 + 25, this.getHeight() - 25 - 12, 25, 25);
+		lbmini = drawPicture("picture\\minimize.png", this.getWidth() - 100, this.getHeight() - 25 - 12, 25, 25);
+		lbexit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		lbrestore.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		lbmini.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		lbbutlist.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		lbsetting.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	}
+
+	public void eventbuttit(MouseEvent e) {
+		if (e.getSource() == lbexit) {
+			System.exit(0);
+		}
+		if (e.getSource() == lbrestore) {
+
+		}
+		if (e.getSource() == lbmini) {
+			this.setState(JFrame.ICONIFIED);
+
+		}
+	}
+
+	JFrame ColorFrame = null;
+
+	public void eventPress(MouseEvent e) {
+		if (e.getSource() == lbsetting) {
+			if (ColorFrame == null){
+				ColorFrame = new ColorDia();
+			}else
+			if (ColorFrame != null){
+				ColorFrame.dispose();
+				ColorFrame = null;
+			}
+			this.validate();
+			this.repaint();
+		} 
+	}
+
+	public void eventEnter(MouseEvent e) {
+		if (e.getSource() == lbexit) {
+			lbexit.setBackground(BarColor);
+		}
+		if (e.getSource() == lbrestore) {
+			lbrestore.setBackground(BarColor);
+		}
+		if (e.getSource() == lbmini) {
+			lbmini.setBackground(BarColor);
+		}
+		if (e.getSource() == lbbutlist) {
+			lbbutlist.setBackground(TitColor);
+		}
+		if (e.getSource() == lbsetting) {
+			lbsetting.setBackground(TitColor);
+		}
+	}
+
+	public void eventExitButTit(MouseEvent e) {
+		if (e.getSource() == lbexit) {
+			lbexit.setBackground(TitColor);
+		}
+		if (e.getSource() == lbrestore) {
+			lbrestore.setBackground(TitColor);
+		}
+		if (e.getSource() == lbmini) {
+			lbmini.setBackground(TitColor);
+		}
+		if (e.getSource() == lbbutlist) {
+			lbbutlist.setBackground(BarColor);
+		}
+		if (e.getSource() == lbsetting) {
+			lbsetting.setBackground(BarColor);
+		}
+	}
+
+	// =========================================================================================
+	// ==============================Thuoc_tinh_rieng===========================================
+	public void setProperties() {
+		lbexit.setOpaque(true);
+		lbmini.setOpaque(true);
+		lbrestore.setOpaque(true);
+		lbexit.setBackground(TitColor);
+		lbrestore.setBackground(TitColor);
+		lbmini.setBackground(TitColor);
+
+		lbsetting.setOpaque(true);
+		lbsetting.setBackground(BarColor);
+		lbbutlist.setOpaque(true);
+		lbbutlist.setBackground(BarColor);
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		eventEnter(e);
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		eventExitButTit(e);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+
+		eventTextSearch(e);
+		eventbuttit(e);
+		eventPress(e);
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public static void main(String[] args) {
+		new FormMain();
+	}
+}
